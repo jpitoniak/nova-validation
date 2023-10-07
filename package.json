@@ -1,0 +1,17 @@
+{
+  "name": "nova-validation",
+  "version": "0.0.1",
+  "description": "The form validation library that makes the browser do all the work.",
+  "main": "./dist/module.cjs.js",
+  "unpkg": "./dist/browser.min.js",
+  "module": "./dist/module.esm.js",
+  "scripts": {
+    "build": "node ./scripts/build.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jason Pitoniak",
+  "license": "MIT",
+  "devDependencies": {
+    "esbuild": "^0.14.43"
+  }
+}
