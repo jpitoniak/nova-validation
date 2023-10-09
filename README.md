@@ -127,7 +127,7 @@ Nova Validation has two ways to handle custom validations on fields: via a custo
 The preferred method of adding custom validation is through a custom event listener.  Nova will trigger a `nova:custom-validation` event each time it validates a field.  An event listener listening for this event should call the `setCustomValidity()` method of the Event object's `srcElement` to set or remove an error message:
 
 ```
-document.getElemetById("my_form_field").addEventListener("nova:custom-validation", event => {
+document.getElementById("my_form_field").addEventListener("nova:custom-validation", event => {
     let hasError = false
 
     // add custom validation code here
