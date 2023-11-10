@@ -113,7 +113,7 @@ function validateElement(el) {
                 let errEl = document.createElement("div")
                 errEl.setAttribute("id", id)
                 errEl.setAttribute("class", "nova-errormessage")
-                first.parentNode.insertBefore(errEl)
+                first.before(errEl)
 
                 // add the aria-errormessage attribute to the first radio in the group
                 first.setAttribute("aria-errormessage", id)
@@ -188,11 +188,11 @@ function validateElement(el) {
             if (!errEl) {
             	// element specifies an error message element, but the element does not exist
             	// create the error message element and insert it immediately after the form element
-            	let newEl = document.createElement("div")
-            	newEl.id = errId
-            	newEl.class = "nova-errormessage"
+            	errEl = document.createElement("div")
+            	errEl.id = errId
+            	errEl.class = "nova-errormessage"
 
-            	el.parentNode.insertAfter(el)
+            	el.after(errEl)
             }
             
             // get the appropriate error message for the type of error
