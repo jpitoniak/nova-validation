@@ -27,7 +27,7 @@ function init() {
 	    	e.preventDefault()
 
 	    	// return focus to first invalid element
-	    	results[0].element.focus()
+	    	results[0].focus()
 	    }
 	}, true)
 
