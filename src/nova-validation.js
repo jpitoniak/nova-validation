@@ -267,7 +267,7 @@ function validateForm(frm) {
 	// collect fields that are invalid
 	let invalidFields = []
 
-	for(let i = 0; i < el.elements.length; i++) {
+	for(let i = 0; i < frm.elements.length; i++) {
 		// loop through the form elements and check each
 		// all elements are checked so that errors are show on elements that may not have been touched
 		let status = validateElement(frm.elements[i])
