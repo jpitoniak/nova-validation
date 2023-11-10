@@ -9,7 +9,7 @@
       let results = validateForm(e.target);
       if (results.length > 0) {
         e.preventDefault();
-        results[0].element.focus();
+        results[0].focus();
       }
     }, true);
     window.addEventListener("DOMContentLoaded", (e) => {
@@ -20,20 +20,20 @@
       });
     });
   }
-  function validateElement(el2) {
+  function validateElement(el) {
     let valid = true;
-    let form = el2.closest("form");
+    let form = el.closest("form");
     if (form && form.hasAttribute("nova-ignore")) {
       return null;
     }
-    if (el2.type == "radio") {
+    if (el.type == "radio") {
       let ancestor = form ? form : document;
-      if (ancestor.querySelector("input[type=radio][name=" + el2.name + "][nova-ignore]")) {
+      if (ancestor.querySelector("input[type=radio][name=" + el.name + "][nova-ignore]")) {
         return null;
       }
-      let checked = ancestor.querySelector("input[type=radio][name=" + el2.name + "][checked]");
-      let required = ancestor.querySelector("input[type=radio][name=" + el2.name + "][required]");
-      let errMarker = ancestor.querySelector("input[type=radio][name=" + el2.name + "][aria-errormessage]");
+      let checked = ancestor.querySelector("input[type=radio][name=" + el.name + "][checked]");
+      let required = ancestor.querySelector("input[type=radio][name=" + el.name + "][required]");
+      let errMarker = ancestor.querySelector("input[type=radio][name=" + el.name + "][aria-errormessage]");
       let errId = null;
       let errEl = null;
       if (errMarker) {
@@ -45,78 +45,78 @@
           errEl.innerText = "";
           errEl.hidden = true;
         }
-        ancestor.querySelector("input[type=radio][name=" + el2.name + "][aria-invalid]").removeAttribute("aria-invalid");
+        ancestor.querySelector("input[type=radio][name=" + el.name + "][aria-invalid]").removeAttribute("aria-invalid");
       } else if (required) {
         if (!errEl) {
-          let first = ancestor.querySelector("input[type=radio][name=" + el2.name + "]");
+          let first = ancestor.querySelector("input[type=radio][name=" + el.name + "]");
           let id = getUniqueId("nova-error-element-");
           let errEl2 = document.createElement("div");
           errEl2.setAttribute("id", id);
           errEl2.setAttribute("class", "nova-errormessage");
-          first.parentNode.insertBefore(errEl2);
+          first.before(errEl2);
           first.setAttribute("aria-errormessage", id);
         }
-        errDef = ancestor.querySelector("input[type=radio][name=" + el2.name + "][nova-error-valuemissing],input[type=radio][name=" + el2.name + "][nova-error-required],input[type=radio][name=" + el2.name + "][nova-error]");
-        errEl.innerText = findErrorMessage(errDef || el2, ["nova-error-valuemissing", "nova-error-required", "nova-error"]);
+        errDef = ancestor.querySelector("input[type=radio][name=" + el.name + "][nova-error-valuemissing],input[type=radio][name=" + el.name + "][nova-error-required],input[type=radio][name=" + el.name + "][nova-error]");
+        errEl.innerText = findErrorMessage(errDef || el, ["nova-error-valuemissing", "nova-error-required", "nova-error"]);
         errEl.hidden = false;
         required.setAttribute("aria-invalid", "true");
       }
-    } else if (el2.tagName !== "BUTTON" && !["button", "submit", "reset", "hidden"].includes(el2.type)) {
-      if (el2.hasAttribute("nova-ignore")) {
+    } else if (el.tagName !== "BUTTON" && !["button", "submit", "reset", "hidden"].includes(el.type)) {
+      if (el.hasAttribute("nova-ignore")) {
         return null;
       }
-      let attrs = el2.getAttributeNames();
+      let attrs = el.getAttributeNames();
       let errId = null;
       let errEl = null;
       if (attrs.includes("aria-errormessage")) {
-        errId = el2.getAttribute("aria-errormessage");
+        errId = el.getAttribute("aria-errormessage");
         errEl = document.getElementById(errId);
       }
-      el2.dispatchEvent(novaCustomValidationEvent);
-      const code = el2.getAttribute("nova-custom-validation");
+      el.dispatchEvent(novaCustomValidationEvent);
+      const code = el.getAttribute("nova-custom-validation");
       if (code) {
-        let msg = Function("$element", "return " + code)(el2);
-        el2.setCustomValidity(msg);
+        let msg = Function("$element", "return " + code)(el);
+        el.setCustomValidity(msg);
       }
-      if (!el2.checkValidity()) {
+      if (!el.checkValidity()) {
         valid = false;
-        el2.setAttribute("aria-invalid", "true");
+        el.setAttribute("aria-invalid", "true");
         if (!errId) {
           errId = "nova-error-element-" + Math.floor(Math.random() * 9999999999999).toString(36);
-          el2.setAttribute("aria-errormessage", errId);
+          el.setAttribute("aria-errormessage", errId);
         }
         if (!errEl) {
-          let newEl = document.createElement("div");
-          newEl.id = errId;
-          newEl.class = "nova-errormessage";
-          el2.parentNode.insertAfter(el2);
+          errEl = document.createElement("div");
+          errEl.id = errId;
+          errEl.class = "nova-errormessage";
+          el.after(errEl);
         }
         let messageAttrs = [];
-        if (el2.validity.badInput) {
+        if (el.validity.badInput) {
           messageAttrs = ["nova-error-badinput", "nova-error"];
-        } else if (el2.validity.customError) {
+        } else if (el.validity.customError) {
           messageAttrs = ["nova-error-customerror", "nova-error"];
-        } else if (el2.validity.patternMissmatch) {
+        } else if (el.validity.patternMissmatch) {
           messageAttrs = ["nova-error-patternmismatch", "nova-error"];
-        } else if (el2.validity.rangeOverflow) {
+        } else if (el.validity.rangeOverflow) {
           messageAttrs = ["nova-error-rangeoverflow", "nova-error-range", "nova-error"];
-        } else if (el2.validity.rangeUnderflow) {
+        } else if (el.validity.rangeUnderflow) {
           messageAttrs = ["nova-error-rangeunderflow", "nova-error-range", "nova-error"];
-        } else if (el2.validity.stepMismatch) {
+        } else if (el.validity.stepMismatch) {
           messageAttrs = ["nova-error-stepmismatch", "nova-error"];
-        } else if (el2.validity.tooLong) {
+        } else if (el.validity.tooLong) {
           messageAttrs = ["nova-error-toolong", "nova-error-length", "nova-error"];
-        } else if (el2.validity.tooShort) {
+        } else if (el.validity.tooShort) {
           messageAttrs = ["nova-error-tooshort", "nova-error-length", "nova-error"];
-        } else if (el2.validity.typeMismatch) {
+        } else if (el.validity.typeMismatch) {
           messageAttrs = ["nova-error-typemismatch", "nova-error"];
-        } else if (el2.validity.valueMissing) {
+        } else if (el.validity.valueMissing) {
           messageAttrs = ["nova-error-valuemissing", "nova-error-required", "nova-error"];
         }
-        errEl.innerText = findErrorMessage(el2, messageAttrs);
+        errEl.innerText = findErrorMessage(el, messageAttrs);
         errEl.hidden = false;
       } else {
-        el2.removeAttribute("aria-invalid");
+        el.removeAttribute("aria-invalid");
         if (errEl) {
           errEl.hidden = true;
           errEl.innerText = "";
@@ -130,7 +130,7 @@
       return [];
     }
     let invalidFields = [];
-    for (let i = 0; i < el.elements.length; i++) {
+    for (let i = 0; i < frm.elements.length; i++) {
       let status = validateElement(frm.elements[i]);
       if (status === false) {
         invalidFields.push(frm.elements[i]);
@@ -138,18 +138,18 @@
     }
     return invalidFields;
   }
-  function findErrorMessage(el2, attrList) {
-    let attrs = el2.getAttributeNames();
-    let min = getNumericAttrributeValue(el2, "min");
-    let max = getNumericAttrributeValue(el2, "max");
-    let minLen = getNumericAttrributeValue(el2, "minlength");
-    let maxLen = getNumericAttrributeValue(el2, "maxlength");
-    let step = getNumericAttrributeValue(el2, "step");
-    let prevStep = isNaN(step) ? "" : el2.value - el2.value % step;
-    let nextStep = isNaN(step) ? "" : el2.value + (step - el2.value % step);
+  function findErrorMessage(el, attrList) {
+    let attrs = el.getAttributeNames();
+    let min = getNumericAttrributeValue(el, "min");
+    let max = getNumericAttrributeValue(el, "max");
+    let minLen = getNumericAttrributeValue(el, "minlength");
+    let maxLen = getNumericAttrributeValue(el, "maxlength");
+    let step = getNumericAttrributeValue(el, "step");
+    let prevStep = isNaN(step) ? "" : el.value - el.value % step;
+    let nextStep = isNaN(step) ? "" : el.value + (step - el.value % step);
     for (let i = 0; i < attrList.length; i++) {
       if (attrs.includes(attrList[i])) {
-        let error = el2.getAttribute(attrList[i]).trim();
+        let error = el.getAttribute(attrList[i]).trim();
         error = error.replace("%min%", min);
         error = error.replace("%max%", max);
         error = error.replace("%minlength%", minLen);
@@ -162,10 +162,10 @@
         }
       }
     }
-    return el2.validationMessage;
+    return el.validationMessage;
   }
-  function getNumericAttrributeValue(el2, attributeName) {
-    attr = el2.getAttribute(attributeName);
+  function getNumericAttrributeValue(el, attributeName) {
+    attr = el.getAttribute(attributeName);
     if (isNaN(attr)) {
       return "";
     }

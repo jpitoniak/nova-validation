@@ -1,6 +1,6 @@
 {
   "name": "nova-validation",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "The form validation library that makes the browser do all the work.",
   "main": "./dist/module.cjs.js",
   "unpkg": "./dist/browser.min.js",
